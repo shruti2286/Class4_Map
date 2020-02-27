@@ -103,7 +103,7 @@ map.on('style.load', function() {
   // add a geojson source to the map using our external geojson file
   map.addSource('pluto-bk-cd6', {
     type: 'geojson',
-    data: './data/brooklyn_cd_6_trimmed.geojson',
+    data: './data/CB104.geojson',
   });
 
   // let's make sure the source got added by logging the current map state to the console
