@@ -99,7 +99,7 @@ map.on('style.load', function() {
       map.getCanvas().style.cursor = 'pointer';  // make the cursor a pointer
 
 console.log(features)
-      var hoveredFeature = features[0]
+      var hoveredFeature = features[1]
       console.log(hoveredFeature)
       var featureInfo = `
         <h4>${hoveredFeature.properties.Address}</h4>
