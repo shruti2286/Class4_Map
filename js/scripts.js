@@ -4,7 +4,7 @@ mapboxgl.accessToken ='pk.eyJ1Ijoic2hydXRpMjE1IiwiYSI6ImNrNzR3dndkYjBpYTEzaHBvZG
 
 // we want to return to this point and zoom level after the user interacts
 // with the map, so store them in variables
-var initialCenterPoint = [-73.991780, 40.676]
+var initialCenterPoint = [-73.994019, 40.760443]
 var initialZoom = 13
 
 
@@ -46,22 +46,21 @@ map.on('style.load', function() {
     source: 'CB104',
     paint: {
       'fill-color': {
-        type: 'continuous',
         property: 'NumFloors',
         stops: [
           [
-            'NumFloors<=2',
-            color: 'lightblue',
+            0,
+            'lightblue'
           ],
           [
-            'NumFloors<=6',
-            color: 'blue',
+            2,
+            'blue'
           ],
           [
-            'NumFloors>7',
-            color: 'darkblue',
+            7,
+            'darkblue'
           ],
-      ]
+      ]}
     }
   })
 
@@ -99,14 +98,15 @@ map.on('style.load', function() {
     if (features.length > 0) {
       map.getCanvas().style.cursor = 'pointer';  // make the cursor a pointer
 
+console.log(features)
       var hoveredFeature = features[0]
+      console.log(hoveredFeature)
       var featureInfo = `
         <h4>${hoveredFeature.properties.Address}</h4>
-        <p><strong>Number of Floors:</strong> ${NumFloors(parseInt(hoveredFeature.properties.NumFloors)).description}</p>
+        <p><strong>Number of Floors:</strong> ${hoveredFeature.properties.NumFloors}</p>
         <p><strong>Zoning:</strong> ${hoveredFeature.properties.ZoneDist1}</p>
       `
       $('#feature-info').html(featureInfo)
-
       // set this lot's polygon feature as the data for the highlight source
       map.getSource('highlight-feature').setData(hoveredFeature.geometry);
     } else {
