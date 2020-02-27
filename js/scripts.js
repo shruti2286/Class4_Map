@@ -7,76 +7,6 @@ mapboxgl.accessToken = 'pk.eyJ1Ijoic2hydXRpMjE1IiwiYSI6ImNrNzR3dndkYjBpYTEzaHBvZ
 var initialCenterPoint = [-73.991780, 40.676]
 var initialZoom = 13
 
-// a helper function for looking up colors and descriptions for NYC land use codes
-var LandUseLookup = (code) => {
-  switch (code) {
-    case 1:
-      return {
-        color: '#f4f455',
-        description: '1 & 2 Family',
-      };
-    case 2:
-      return {
-        color: '#f7d496',
-        description: 'Multifamily Walk-up',
-      };
-    case 3:
-      return {
-        color: '#FF9900',
-        description: 'Multifamily Elevator',
-      };
-    case 4:
-      return {
-        color: '#f7cabf',
-        description: 'Mixed Res. & Commercial',
-      };
-    case 5:
-      return {
-        color: '#ea6661',
-        description: 'Commercial & Office',
-      };
-    case 6:
-      return {
-        color: '#d36ff4',
-        description: 'Industrial & Manufacturing',
-      };
-    case 7:
-      return {
-        color: '#dac0e8',
-        description: 'Transportation & Utility',
-      };
-    case 8:
-      return {
-        color: '#5CA2D1',
-        description: 'Public Facilities & Institutions',
-      };
-    case 9:
-      return {
-        color: '#8ece7c',
-        description: 'Open Space & Outdoor Recreation',
-      };
-    case 10:
-      return {
-        color: '#bab8b6',
-        description: 'Parking Facilities',
-      };
-    case 11:
-      return {
-        color: '#5f5f60',
-        description: 'Vacant Land',
-      };
-    case 12:
-      return {
-        color: '#5f5f60',
-        description: 'Other',
-      };
-    default:
-      return {
-        color: '#5f5f60',
-        description: 'Other',
-      };
-  }
-};
 
 // set the default text for the feature-info div
 
@@ -101,7 +31,7 @@ map.addControl(new mapboxgl.NavigationControl());
 map.on('style.load', function() {
 
   // add a geojson source to the map using our external geojson file
-  map.addSource('pluto-bk-cd6', {
+  map.addSource('CB104', {
     type: 'geojson',
     data: './data/CB104.geojson',
   });
@@ -111,61 +41,27 @@ map.on('style.load', function() {
 
   // add a layer for our custom source
   map.addLayer({
-    id: 'fill-pluto-bk-cd6',
+    id: 'fill-CB104',
     type: 'fill',
-    source: 'pluto-bk-cd6',
+    source: 'CB104',
     paint: {
       'fill-color': {
-        type: 'categorical',
-        property: 'LandUse',
+        type: 'continuous',
+        property: 'NumFloors',
         stops: [
           [
-            '01',
-            LandUseLookup(1).color,
+            'NumFloors<=2',
+            color: 'lightblue',
           ],
           [
-            '02',
-            LandUseLookup(2).color,
+            'NumFloors<=6',
+            color: 'blue',
           ],
           [
-            '03',
-            LandUseLookup(3).color,
+            'NumFloors>7',
+            color: 'darkblue',
           ],
-          [
-            '04',
-            LandUseLookup(4).color,
-          ],
-          [
-            '05',
-            LandUseLookup(5).color,
-          ],
-          [
-            '06',
-            LandUseLookup(6).color,
-          ],
-          [
-            '07',
-            LandUseLookup(7).color,
-          ],
-          [
-            '08',
-            LandUseLookup(8).color,
-          ],
-          [
-            '09',
-            LandUseLookup(9).color,
-          ],
-          [
-            '10',
-            LandUseLookup(10).color,
-          ],
-          [
-            '11',
-            LandUseLookup(11).color,
-          ],
-
-        ]
-      }
+      ]
     }
   })
 
@@ -195,7 +91,7 @@ map.on('style.load', function() {
   map.on('mousemove', function (e) {
     // query for the features under the mouse, but only in the lots layer
     var features = map.queryRenderedFeatures(e.point, {
-        layers: ['fill-pluto-bk-cd6'],
+        layers: ['fill-CB104'],
     });
 
     // if the mouse pointer is over a feature on our layer of interest
@@ -206,7 +102,7 @@ map.on('style.load', function() {
       var hoveredFeature = features[0]
       var featureInfo = `
         <h4>${hoveredFeature.properties.Address}</h4>
-        <p><strong>Land Use:</strong> ${LandUseLookup(parseInt(hoveredFeature.properties.LandUse)).description}</p>
+        <p><strong>Number of Floors:</strong> ${NumFloors(parseInt(hoveredFeature.properties.NumFloors)).description}</p>
         <p><strong>Zoning:</strong> ${hoveredFeature.properties.ZoneDist1}</p>
       `
       $('#feature-info').html(featureInfo)
