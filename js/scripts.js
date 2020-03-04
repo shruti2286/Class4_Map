@@ -50,15 +50,15 @@ map.on('style.load', function() {
         stops: [
           [
             0,
-            'lightblue'
+            '#F1EEF6'
           ],
           [
             2,
-            'blue'
+            '#74A9CF'
           ],
           [
             7,
-            'darkblue'
+            '#045A8D'
           ],
       ]}
     }
